@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Time Clock</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="time">Current Time (CST)</h1>
+        <time id="theTime">00:00:00</time>
+        <div class="mainButtons">
+            <button id="startTime">Clock In</button>
+            <button id="resetTime">Reset</button>
+            <button id="stopTime">Clock Out</button>
+        </div>
+
+        <div class="timeInfo">
+            <div>
+                <span>Clocked in:</span>
+                <time id="timeStarted"><span class="time-unit">0</span><span class="time-label">h</span> <span class="time-unit">0</span><span class="time-label">m</span> <span class="time-unit">0</span><span class="time-label">s</span></time>
+            </div>
+            <div>
+                <span>Clocked out:</span>
+                <time id="timeStopped"><span class="time-unit">0</span><span class="time-label">h</span> <span class="time-unit">0</span><span class="time-label">m</span> <span class="time-unit">0</span><span class="time-label">s</span></time>
+            </div>
+            <div>
+                <span>Elapsed Time:</span>
+                <time id="elapsedTime"><span class="time-unit">0</span><span class="time-label">h</span> <span class="time-unit">0</span><span class="time-label">m</span> <span class="time-unit">0</span><span class="time-label">s</span></time>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
