@@ -10,29 +10,50 @@ let timerInterval;
 let startTimestamp;
 let elapsedSeconds = 0;
 let clockRunning = false;
+let use24HourFormat = false;
 
-//initialize the clock immediately
+const timeFormatToggle = document.createElement('button');
+timeFormatToggle.innerText = '24h';
+timeFormatToggle.classList.add('format-toggle');
+
+theTime.parentNode.insertBefore(timeFormatToggle, theTime.nextSibling);
+
+timeFormatToggle.addEventListener('click', toggleTimeFormat);
+
 updateCurrentTime();
 setInterval(updateCurrentTime, 1000);
 
-//click events
 startTime.addEventListener('click', StartClock);
 stopTime.addEventListener('click', StopClock);
 resetTime.addEventListener('click', ResetClock);
+timeFormatToggle.addEventListener('click', toggleTimeFormat);
+
+function toggleTimeFormat() {
+    use24HourFormat = !use24HourFormat;
+    timeFormatToggle.innerText = use24HourFormat ? '24h' : '12h';
+    
+    updateCurrentTime();
+    if (timeStarted.innerText !== '0h 0m 0s') {
+        timeStarted.innerHTML = formatTimeFancy(startTimestamp, !use24HourFormat);
+    }
+    if (timeStopped.innerText !== '0h 0m 0s') {
+        let stopTimestamp = new Date(); 
+        timeStopped.innerHTML = formatTimeFancy(stopTimestamp, !use24HourFormat);
+    }
+}
 
 function updateCurrentTime() {
     let date = new Date();
     let cstDate = new Date(date.toLocaleString("en-US", { timeZone: "America/Chicago" }));
-    theTime.innerHTML = formatTimeFancy(cstDate);
+    theTime.innerHTML = formatTimeFancy(cstDate, !use24HourFormat);
 }
 
-//starting the clock
 function StartClock() {
     if (clockRunning) return;
     console.log('Start Time');
     clockRunning = true;
     startTimestamp = new Date();
-    timeStarted.innerHTML = formatTimeFancy(startTimestamp);
+    timeStarted.innerHTML = formatTimeFancy(startTimestamp, !use24HourFormat);
     timerInterval = setInterval(updateElapsedTime, 1000);
     startTime.disabled = true;
     stopTime.disabled = false;
@@ -48,22 +69,20 @@ function updateElapsedTime() {
         hours: hours,
         minutes: minutes,
         seconds: seconds
-    });
+    }, false);
 }
 
-//stopping the clock
 function StopClock() {
     if (!clockRunning) return;
     console.log('Stop Time');
     clockRunning = false;
     clearInterval(timerInterval);
     let stopTimestamp = new Date();
-    timeStopped.innerHTML = formatTimeFancy(stopTimestamp);
+    timeStopped.innerHTML = formatTimeFancy(stopTimestamp, !use24HourFormat);
     startTime.disabled = false;
     stopTime.disabled = true;
 }
 
-//resetting the clock
 function ResetClock() {
     console.log('Reset Time');
     clockRunning = false;
@@ -76,20 +95,32 @@ function ResetClock() {
     stopTime.disabled = false;
 }
 
-function formatTimeFancy(date) {
-    let hours, minutes, seconds;
+function formatTimeFancy(date, showAmPm) {
+    let hours, minutes, seconds, ampm = '';
     
     if (date instanceof Date) {
         hours = date.getHours();
         minutes = date.getMinutes();
         seconds = date.getSeconds();
+        
+        if (showAmPm) {
+            ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+        }
     } else {
         hours = date.hours;
         minutes = date.minutes;
         seconds = date.seconds;
     }
     
-    return `<span class="time-unit">${String(hours).padStart(2, '0')}</span><span class="time-label">h</span> <span class="time-unit">${String(minutes).padStart(2, '0')}</span><span class="time-label">m</span> <span class="time-unit">${String(seconds).padStart(2, '0')}</span><span class="time-label">s</span>`;
+    let result = `<span class="time-unit">${String(hours).padStart(2, '0')}</span><span class="time-label">h</span> <span class="time-unit">${String(minutes).padStart(2, '0')}</span><span class="time-label">m</span> <span class="time-unit">${String(seconds).padStart(2, '0')}</span><span class="time-label">s</span>`;
+    
+    if (showAmPm) {
+        result += ` <span class="time-unit">${ampm}</span>`;
+    }
+    
+    return result;
 }
 
 function calculateElapsedTime(start, stop) {
@@ -102,5 +133,5 @@ function calculateElapsedTime(start, stop) {
         hours: hours,
         minutes: minutes,
         seconds: seconds
-    });
+    }, false);
 }

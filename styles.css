@@ -149,3 +149,16 @@ button:hover:not(:disabled) {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     transform: translateY(-5px);
 }
+
+.format-toggle {
+    background-color: #ff0077;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.format-toggle:hover {
+    background-color: #ff8000;
+}
